@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>날씨 커뮤니티</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Weather</div>
+        <div class="location">
+            <span class="location-icon">📍</span>
+            <span id="location-name">지역</span>
+        </div>
+        <div class="login">
+            <a href="#">로그인</a>
+        </div>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section class="current-weather">
+            <h1>현재 날씨</h1>
+            <div class="temperature-range">
+                <span class="low-temp">18°C</span> ~ <span class="high-temp">26°C</span>
+            </div>
+            <div class="current-temp">
+                <span id="current-temp">22.9°C</span>
+                <span class="weather-icon">☀️</span>
+            </div>
+        </section>
+        <section class="forecast">
+            <div class="weekly-forecast">
+                <h2>주간예보</h2>
+                <ul id="weekly-forecast">
+                    <li>일</li>
+                    <li>월</li>
+                    <li>화</li>
+                    <li>수</li>
+                    <li>목</li>
+                    <li>금</li>
+                    <li>토</li>
+                </ul>
+            </div>
+            <div class="hourly-forecast">
+                <h2>시간별 예보</h2>
+                <ul id="hourly-forecast">
+                    <li>9시</li>
+                    <li>12시</li>
+                    <li>15시</li>
+                    <li>18시</li>
+                    <li>21시</li>
+                </ul>
+            </div>
+            <div class="live-comments">
+                <h2>실시간 댓글</h2>
+                <ul id="comments-list">
+                    <li>댓글 1</li>
+                    <li>댓글 2</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 WeatherCommunity</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
