@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    background-color: #4CAF50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em;
+    color: white;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.location {
+    display: flex;
+    align-items: center;
+}
+
+.location-icon {
+    margin-right: 0.5em;
+}
+
+.login a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #f1f1f1;
+    margin: 0;
+}
+
+nav ul li {
+    margin: 0 1em;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+main {
+    padding: 1em;
+}
+
+.current-weather {
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+.temperature-range {
+    font-size: 1.2em;
+}
+
+.current-temp {
+    font-size: 2em;
+    margin-top: 0.5em;
+}
+
+.forecast {
+    display: flex;
+    justify-content: space-around;
+}
+
+.weekly-forecast, .hourly-forecast, .live-comments {
+    width: 30%;
+}
+
+.weekly-forecast ul, .hourly-forecast ul, .live-comments ul {
+    list-style: none;
+    padding: 0;
+}
+
+footer {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 0.5em 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
