@@ -35,11 +35,6 @@ header {
     margin-right: 0.5em;
 }
 
-.location-search {
-    font-size: 1em;
-    color: white;
-}
-
 .location-search a {
     color: white;
     text-decoration: none;
@@ -234,27 +229,42 @@ main {
     border-bottom: none;
 }
 
-.location-search h1 {
-    font-size: 2em;
-    margin-bottom: 1em;
-    color: #333; /* 색상을 더 진하게 변경 */
+footer {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1em 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
-.search-bar {
+.search-content {
+    background-color: white;
+    border-radius: 8px;
+    padding: 2em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 2em auto;
+    max-width: 600px;
+    text-align: center;
+}
+
+.search-box {
     display: flex;
     justify-content: center;
-    margin-bottom: 1em;
+    align-items: center;
+    margin-top: 1em;
 }
 
-.search-bar input[type="text"] {
-    width: 70%;
+.search-box input {
     padding: 0.5em;
+    width: 80%;
     border: 1px solid #ddd;
     border-radius: 4px 0 0 4px;
     outline: none;
 }
 
-.search-bar button {
+.search-box button {
     padding: 0.5em 1em;
     border: none;
     background-color: #4CAF50;
@@ -263,31 +273,18 @@ main {
     cursor: pointer;
 }
 
-.search-bar button:hover {
+.search-box button:hover {
     background-color: #45a049;
 }
 
 #search-results {
     list-style: none;
     padding: 0;
-    margin: 0;
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: white;
+    margin: 1em 0 0;
 }
 
 #search-results li {
-    padding: 0.5em 1em;
+    padding: 0.5em 0;
     border-bottom: 1px solid #ddd;
     cursor: pointer;
-}
-
-#search-results li:last-child {
-    border-bottom: none;
-}
-
-#search-results li:hover {
-    background-color: #f1f1f1;
 }

@@ -5,19 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>지역 검색</title>
     <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="logo">HowsTheWeather</div>
-        <a href="/" class="back-to-main">메인으로</a>
+        <div class="location-search">
+            <a href="/">메인으로</a>
+        </div>
     </header>
     <main>
-        <h1>지역검색</h1>
-        <div class="search-box">
-            <input type="text" id="search-input" placeholder="지역을 입력하세요...">
-            <button id="search-button">검색</button>
-        </div>
-        <ul id="search-results"></ul>
+        <section class="search-content">
+            <h1>지역검색</h1>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="지역을 입력하세요...">
+                <button id="search-button">검색</button>
+            </div>
+            <ul id="search-results">
+                <!-- 검색 결과가 표시됩니다 -->
+            </ul>
+        </section>
     </main>
     <script src="/static/location_search.js"></script>
 </body>
