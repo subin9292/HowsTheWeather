@@ -14,8 +14,8 @@
             <span class="location-icon">📍</span>
             <span id="location-name">서울</span>
         </div>
-        <div class="location-search">
-            <a href="/location_search.html">지역검색</a>
+        <div class="login">
+            <a href="/location_search">지역검색</a>
         </div>
     </header>
     <nav>
@@ -39,9 +39,12 @@
             <div class="live-comments">
                 <h2>실시간 댓글</h2>
                 <ul id="comments-list">
-                    <!-- 댓글 목록이 표시됩니다 -->
+                    {% for comment in comments %}
+                        <li><strong>{{ comment.name }}</strong>: {{ comment.comment }}</li>
+                    {% endfor %}
                 </ul>
                 <form id="comment-form">
+                    <input type="text" id="comment-name" placeholder="이름" required>
                     <input type="text" id="comment-input" placeholder="댓글을 입력하세요..." required>
                     <button type="submit">댓글 달기</button>
                 </form>

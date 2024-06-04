@@ -117,11 +117,19 @@ main {
     display: flex;
 }
 
-#comment-input {
+#comment-name {
     flex: 1;
     padding: 0.5em;
     border: 1px solid #ddd;
     border-radius: 4px 0 0 4px;
+    outline: none;
+}
+
+#comment-input {
+    flex: 3;
+    padding: 0.5em;
+    border: 1px solid #ddd;
+    border-radius: 0 4px 4px 0;
     outline: none;
 }
 
@@ -130,7 +138,7 @@ main {
     border: none;
     background-color: #4CAF50;
     color: white;
-    border-radius: 0 4px 4px 0;
+    border-radius: 4px;
     cursor: pointer;
 }
 
@@ -203,7 +211,6 @@ main {
 .forecast {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 2em;
 }
 
 .weekly-forecast, .hourly-forecast {
@@ -227,64 +234,4 @@ main {
 
 .comments-list li:last-child {
     border-bottom: none;
-}
-
-footer {
-    background-color: #4CAF50;
-    color: white;
-    text-align: center;
-    padding: 1em 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
-
-.search-content {
-    background-color: white;
-    border-radius: 8px;
-    padding: 2em;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 2em auto;
-    max-width: 600px;
-    text-align: center;
-}
-
-.search-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1em;
-}
-
-.search-box input {
-    padding: 0.5em;
-    width: 80%;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 0 4px;
-    outline: none;
-}
-
-.search-box button {
-    padding: 0.5em 1em;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-}
-
-.search-box button:hover {
-    background-color: #45a049;
-}
-
-#search-results {
-    list-style: none;
-    padding: 0;
-    margin: 1em 0 0;
-}
-
-#search-results li {
-    padding: 0.5em 0;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
 }

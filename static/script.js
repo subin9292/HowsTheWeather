@@ -48,40 +48,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 댓글 기능
     const commentForm = document.getElementById('comment-form');
+    const commentName = document.getElementById('comment-name');
     const commentInput = document.getElementById('comment-input');
     const commentsList = document.getElementById('comments-list');
 
-    // 서버에서 댓글을 가져와서 표시하는 함수
-    async function loadComments() {
-        const response = await fetch('/comments/');
-        const comments = await response.json();
-        commentsList.innerHTML = ''; // 기존 댓글 초기화
-        comments.forEach(comment => {
-            const newComment = document.createElement('li');
-            newComment.textContent = `${comment.name}: ${comment.comment}`;
-            commentsList.appendChild(newComment);
-        });
-    }
-
-    // 초기 댓글 로드
-    loadComments();
-
     commentForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const newComment = {
-            name: '익명',
-            comment: commentInput.value
-        };
+        const name = commentName.value;
+        const comment = commentInput.value;
         const response = await fetch('/comments/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(newComment)
+            body: JSON.stringify({ name, comment })
         });
         if (response.ok) {
-            loadComments(); // 댓글 새로고침
+            const newComment = await response.json();
+            const newCommentItem = document.createElement('li');
+            newCommentItem.innerHTML = `<strong>${newComment.name}</strong>: ${newComment.comment}`;
+            commentsList.appendChild(newCommentItem);
+            commentName.value = '';
             commentInput.value = '';
+            commentsList.scrollTop = commentsList.scrollHeight; // 스크롤을 맨 아래로
         }
     });
 });
