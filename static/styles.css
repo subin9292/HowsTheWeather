@@ -35,7 +35,7 @@ header {
     margin-right: 0.5em;
 }
 
-.location-search a {
+.search-location {
     color: white;
     text-decoration: none;
     font-weight: bold;
@@ -106,6 +106,7 @@ main {
     flex-grow: 1;
     overflow-y: auto;
     margin-bottom: 1em;
+    max-height: 300px; /* Add max-height to keep the section fixed */
 }
 
 #comments-list li {
@@ -115,22 +116,14 @@ main {
 
 #comment-form {
     display: flex;
+    flex-direction: column;
 }
 
-#comment-name {
-    flex: 1;
+#comment-name, #comment-input {
     padding: 0.5em;
     border: 1px solid #ddd;
-    border-radius: 4px 0 0 4px;
-    outline: none;
-}
-
-#comment-input {
-    flex: 3;
-    padding: 0.5em;
-    border: 1px solid #ddd;
-    border-radius: 0 4px 4px 0;
-    outline: none;
+    border-radius: 4px;
+    margin-bottom: 0.5em;
 }
 
 #comment-form button {
@@ -140,6 +133,7 @@ main {
     color: white;
     border-radius: 4px;
     cursor: pointer;
+    align-self: flex-end;
 }
 
 #comment-form button:hover {
@@ -230,8 +224,4 @@ main {
 .weekly-forecast ul li, .hourly-forecast ul li {
     padding: 0.5em 0;
     border-bottom: 1px solid #ddd;
-}
-
-.comments-list li:last-child {
-    border-bottom: none;
 }

@@ -45,32 +45,4 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         mapElement.appendChild(weatherElement);
     });
-
-    // 댓글 기능
-    const commentForm = document.getElementById('comment-form');
-    const commentName = document.getElementById('comment-name');
-    const commentInput = document.getElementById('comment-input');
-    const commentsList = document.getElementById('comments-list');
-
-    commentForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = commentName.value;
-        const comment = commentInput.value;
-        const response = await fetch('/comments/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name, comment })
-        });
-        if (response.ok) {
-            const newComment = await response.json();
-            const newCommentItem = document.createElement('li');
-            newCommentItem.innerHTML = `<strong>${newComment.name}</strong>: ${newComment.comment}`;
-            commentsList.appendChild(newCommentItem);
-            commentName.value = '';
-            commentInput.value = '';
-            commentsList.scrollTop = commentsList.scrollHeight; // 스크롤을 맨 아래로
-        }
-    });
 });
