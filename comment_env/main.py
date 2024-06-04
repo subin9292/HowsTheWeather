@@ -3,7 +3,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from . import models, schemas, database
+# 절대 경로 임포트 사용
+from comment_env import models, schemas, database
 
 models.Base.metadata.create_all(bind=database.engine)
 
@@ -23,6 +24,6 @@ async def read_root(request: Request, db: Session = Depends(database.get_db)):
     comments = db.query(models.Comment).all()
     return templates.TemplateResponse("index.html", {"request": request, "comments": comments})
 
-#if __name__ == "__main__":
- #   import uvicorn
-  #  uvicorn.run(app, host="0.0.0.0", port=8000)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
