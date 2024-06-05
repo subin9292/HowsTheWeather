@@ -1,76 +1,28 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const currentWeather = {
-        temp: "22.9°C",
-        low: "18°C",
-        high: "26°C",
-        icon: "☀️"
-    };
+    const searchInput = document.getElementById('location-search');
+    const searchResults = document.getElementById('search-results');
 
-    document.getElementById('current-temp').textContent = currentWeather.temp;
-    document.querySelector('.low-temp').textContent = currentWeather.low;
-    document.querySelector('.high-temp').textContent = currentWeather.high;
-    document.querySelector('.weather-icon').textContent = currentWeather.icon;
-
-    const cities = [
-        { name: "백령도", temp: "17°C", icon: "☁️", x: "10%", y: "5%" },
-        { name: "서울", temp: "23°C", icon: "☀️", x: "42%", y: "22%" },
-        { name: "춘천", temp: "21°C", icon: "⛅", x: "52%", y: "18%" },
-        { name: "강릉", temp: "24°C", icon: "🌧️", x: "70%", y: "25%" },
-        { name: "울릉/독도", temp: "24°C", icon: "🌧️", x: "85%", y: "18%" },
-        { name: "수원", temp: "24.4°C", icon: "☀️", x: "43%", y: "28%" },
-        { name: "청주", temp: "24°C", icon: "☀️", x: "48%", y: "36%" },
-        { name: "대전", temp: "23.1°C", icon: "☀️", x: "45%", y: "45%" },
-        { name: "안동", temp: "22.7°C", icon: "☀️", x: "55%", y: "35%" },
-        { name: "대구", temp: "24.6°C", icon: "☀️", x: "56%", y: "55%" },
-        { name: "전주", temp: "22.3°C", icon: "☀️", x: "35%", y: "48%" },
-        { name: "광주", temp: "22.3°C", icon: "☀️", x: "35%", y: "56%" },
-        { name: "목포", temp: "21.9°C", icon: "☀️", x: "30%", y: "65%" },
-        { name: "여수", temp: "21.7°C", icon: "☀️", x: "42%", y: "70%" },
-        { name: "울산", temp: "22.3°C", icon: "☀️", x: "72%", y: "60%" },
-        { name: "부산", temp: "21.2°C", icon: "☀️", x: "68%", y: "68%" },
-        { name: "제주도", temp: "23.1°C", icon: "☀️", x: "25%", y: "85%" }
+    const locations = [
+        "서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"
     ];
 
-    const mapElement = document.getElementById('map-overlay');
-
-    cities.forEach(city => {
-        const weatherElement = document.createElement('div');
-        weatherElement.classList.add('weather-info');
-        weatherElement.style.left = city.x;
-        weatherElement.style.top = city.y;
-        weatherElement.innerHTML = `
-            <div class="icon">${city.icon}</div>
-            <div class="name">${city.name}</div>
-            <div class="temp">${city.temp}</div>
-        `;
-        mapElement.appendChild(weatherElement);
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+        searchResults.innerHTML = '';
+        if (query) {
+            const filteredLocations = locations.filter(location => location.toLowerCase().includes(query));
+            filteredLocations.forEach(location => {
+                const li = document.createElement('li');
+                li.textContent = location;
+                searchResults.appendChild(li);
+            });
+        }
     });
 
-    // 댓글 기능
-    const commentForm = document.getElementById('comment-form');
-    const commentName = document.getElementById('comment-name');
-    const commentInput = document.getElementById('comment-input');
-    const commentsList = document.getElementById('comments-list');
-
-    commentForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = commentName.value;
-        const comment = commentInput.value;
-        const response = await fetch('/comments/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name, comment })
-        });
-        if (response.ok) {
-            const newComment = await response.json();
-            const newCommentItem = document.createElement('li');
-            newCommentItem.innerHTML = `<strong>${newComment.name}</strong>: ${newComment.comment}`;
-            commentsList.appendChild(newCommentItem);
-            commentName.value = '';
-            commentInput.value = '';
-            commentsList.scrollTop = commentsList.scrollHeight; // 스크롤을 맨 아래로
+    searchResults.addEventListener('click', (event) => {
+        if (event.target.tagName === 'LI') {
+            searchInput.value = event.target.textContent;
+            searchResults.innerHTML = '';
         }
     });
 });
