@@ -9,7 +9,9 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-templates = Jinja2Templates(directory="backend/templates")
+templates = Jinja2Templates(directory="templates")
+
+models.Base.metadata.create_all(bind=database.engine)
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request, db: Session = Depends(database.get_db)):
@@ -24,7 +26,7 @@ async def create_comment(request: Request, name: str = Form(...), comment: str =
     db.refresh(db_comment)
     return RedirectResponse(url="/", status_code=303)
 
-@app.get("/location_search.html", response_class=HTMLResponse)
+@app.get("/location_search", response_class=HTMLResponse)
 async def location_search(request: Request):
     return templates.TemplateResponse("location_search.html", {"request": request})
 

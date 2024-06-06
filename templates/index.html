@@ -6,6 +6,25 @@
     <title>HowsTheWeather</title>
     <link rel="stylesheet" href="/static/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.7.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.getJSON('http://api.openweathermap.org/data/2.5/weather?id=1835848&appid=a71cf8f55278a20a0840a3e6fcba9384&units=metric', function(data){
+                var minTemp = data.main.temp_min;
+                var maxTemp = data.main.temp_max;
+                var currentTemp = data.main.temp;
+                var now = new Date($.now());
+                var currentDate = now.getFullYear() + '/' + (now.getMonth() + 1 ) + '/' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes();
+                var weatherIcon = data.weather[0].icon;
+
+                $('.low-temp').text(minTemp + '°C');
+                $('.high-temp').text(maxTemp + '°C');
+                $('#current-temp').text('현재 온도: ' + currentTemp + '°C');
+                $('#current-date').text(currentDate);
+                $('.weather-icon').html('<img src="https://openweathermap.org/img/w/' + weatherIcon + '.png" />');
+            });
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -14,7 +33,7 @@
             <span class="location-icon">📍</span>
             <span id="location-name">서울</span>
         </div>
-        <a href="/location_search.html" class="search-location">지역검색</a>
+        <a href="/location_search" class="search-location">지역검색</a>
     </header>
     <nav>
         <ul>
@@ -27,12 +46,13 @@
             <div class="current-weather">
                 <h1>현재 날씨</h1>
                 <div class="temperature-range">
-                    <span class="low-temp">18°C</span> ~ <span class="high-temp">26°C</span>
+                    <span class="low-temp"></span> ~ <span class="high-temp"></span>
                 </div>
                 <div class="current-temp">
-                    <span id="current-temp">22.9°C</span>
-                    <span class="weather-icon">☀️</span>
+                    <span id="current-temp"></span>
+                    <span class="weather-icon"></span>
                 </div>
+                <div id="current-date"></div>
             </div>
             <div class="live-comments">
                 <h2>실시간 댓글</h2>

@@ -1,2 +1,0 @@
-# HowsTheWeather
-Opensource project
