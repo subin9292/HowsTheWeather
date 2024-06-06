@@ -6,7 +6,6 @@
     <title>HowsTheWeather</title>
     <link rel="stylesheet" href="/static/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.7.min.js"></script>
 </head>
 <body>
     <header>
@@ -15,7 +14,7 @@
             <span class="location-icon">📍</span>
             <span id="location-name">서울</span>
         </div>
-        <a href="/location_search" class="search-location">지역검색</a>
+        <a href="/location_search.html" class="search-location">지역검색</a>
     </header>
     <nav>
         <ul>
@@ -28,13 +27,13 @@
             <div class="current-weather">
                 <h1>현재 날씨</h1>
                 <div class="temperature-range">
-                    <span class="low-temp" id="min-temp">-</span> ~ <span class="high-temp" id="max-temp">-</span>
+                    <span id="low-temp"></span> ~ <span id="high-temp"></span>
                 </div>
                 <div class="current-temp">
-                    <span id="current-temp">-</span>
-                    <span class="weather-icon" id="weather-icon">☀️</span>
+                    <span id="current-temp"></span>
+                    <span id="current-icon"></span>
                 </div>
-                <div class="date-time" id="date-time">-</div>
+                <div id="current-date"></div>
             </div>
             <div class="live-comments">
                 <h2>실시간 댓글</h2>
@@ -83,23 +82,5 @@
         </section>
     </main>
     <script src="/static/script.js"></script>
-    <script>
-        $(document).ready(function(){
-            $.getJSON('http://api.openweathermap.org/data/2.5/weather?id=1835848&appid=a71cf8f55278a20a0840a3e6fcba9384&units=metric', function(data){
-                var $minTemp = data.main.temp_min;
-                var $maxTemp = data.main.temp_max;
-                var $cTemp = data.main.temp;
-                var $now = new Date($.now());
-                var $cDate = $now.getFullYear() + '/' + ($now.getMonth() + 1 ) + '/' + $now.getDate() + ' ' + $now.getHours() + ':' + $now.getMinutes();
-                var $wIcon = data.weather[0].icon;
-
-                $('#min-temp').text($minTemp + '°C');
-                $('#max-temp').text($maxTemp + '°C');
-                $('#current-temp').text($cTemp + '°C');
-                $('#date-time').text($cDate);
-                $('#weather-icon').html('<img src="https://openweathermap.org/img/w/' + $wIcon + '.png" alt="weather icon" />');
-            });
-        });
-    </script>
 </body>
 </html>
