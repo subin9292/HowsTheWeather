@@ -80,7 +80,6 @@ main {
     padding: 2em;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 48%;
-    text-align: center;
 }
 
 .live-comments {
@@ -157,50 +156,6 @@ main {
 .current-temp .weather-icon {
     font-size: 2em;
     margin-left: 0.5em;
-}
-
-.weather-map-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    position: relative;
-}
-
-#korea-map {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#map-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.weather-info {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 12px;
-    padding: 0.5em;
-}
-
-.weather-info .icon {
-    font-size: 1.5em;
-    margin-bottom: 0.2em;
-}
-
-.weather-info .temp {
-    font-size: 0.8em;
-}
-
-.weather-info .name {
-    font-size: 0.8em;
 }
 
 .forecast {
