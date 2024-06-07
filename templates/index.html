@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HowsTheWeather - 댓글 시스템</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">HowsTheWeather</div>
+        <div class="location">
+            <span class="location-icon">📍</span>
+            <span id="location-name">서울</span>
+        </div>
+        <a href="/location_search.html" class="search-location">지역검색</a>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section class="main-content">
+            <div class="current-weather">
+                <h1>현재 날씨</h1>
+                <div class="temperature-range">
+                    <span class="low-temp"></span> ~ <span class="high-temp"></span>
+                </div>
+                <div class="current-temp">
+                    <span id="current-temp"></span>
+                    <span class="weather-icon"></span>
+                </div>
+                <div id="current-date"></div>
+            </div>
+            <div class="live-comments">
+                <h2>실시간 댓글</h2>
+                <select id="region-filter">
+                    <option value="모든 지역">모든 지역</option>
+                    <option value="서울">서울</option>
+                    <option value="청주">청주</option>
+                    <option value="포항">포항</option>
+                    <option value="대전">대전</option>
+                    <option value="대구">대구</option>
+                </select>
+                <ul id="comments-list">
+                    {% for comment in comments %}
+                    <li>
+                        <strong>{{ comment.name }}</strong> ({{ comment.region }}): {{ comment.comment }}<br>
+                        <small>{{ comment.created_at }}</small>  <!-- 작성 시간 표시 -->
+                        <span class="region" style="display:none;">{{ comment.region }}</span> <!-- 숨겨진 지역 정보 -->
+                    </li>
+                    {% endfor %}
+                </ul>
+                <form id="comment-form" method="post" action="/comments/">
+                    <input type="text" id="comment-name" name="name" placeholder="이름" required>
+                    <input type="text" id="comment-input" name="comment" placeholder="댓글을 입력하세요..." required>
+                    <select name="region" required>
+                        <option value="" disabled selected>지역을 선택하세요</option>
+                        <option value="서울">서울</option>
+                        <option value="청주">청주</option>
+                        <option value="포항">포항</option>
+                        <option value="대전">대전</option>
+                        <option value="대구">대구</option>
+                    </select>
+                    <button type="submit">댓글 달기</button>
+                </form>
+            </div>
+        </section>
+        <section class="forecast">
+            <div class="weekly-forecast">
+                <h2>주간예보</h2>
+                <ul id="weekly-forecast">
+                    <li>일: 22°C</li>
+                    <li>월: 24°C</li>
+                    <li>화: 21°C</li>
+                    <li>수: 23°C</li>
+                    <li>목: 20°C</li>
+                    <li>금: 19°C</li>
+                    <li>토: 25°C</li>
+                </ul>
+            </div>
+            <div class="hourly-forecast">
+                <h2>시간별 예보</h2>
+                <ul id="hourly-forecast">
+                    <li>9시: 21°C</li>
+                    <li>12시: 24°C</li>
+                    <li>15시: 26°C</li>
+                    <li>18시: 23°C</li>
+                    <li>21시: 20°C</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    <script src="/static/script.js"></script> <!-- JavaScript 파일을 로드합니다 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // 댓글 리스트의 각 항목의 작성 시간을 포맷하는 기능 추가
+            const commentItems = document.querySelectorAll("#comments-list li");
+            commentItems.forEach(item => {
+                const timeElement = item.querySelector("small");
+                if (timeElement) {
+                    const originalTime = new Date(timeElement.textContent);
+                    const kstTime = new Date(originalTime.getTime() + 9 * 60 * 60 * 1000); // UTC 시간을 KST로 변환
+                    
+                    timeElement.textContent = kstTime.toLocaleString('ko-KR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false // 24시간 형식 사용
+                    });
+                }
+            });
+
+            // 지역 선택에 따른 댓글 필터링 기능 추가
+            const regionFilter = document.getElementById("region-filter");
+            regionFilter.addEventListener("change", (event) => {
+                const selectedRegion = event.target.value;
+                const commentItems = document.querySelectorAll("#comments-list li");
+
+                commentItems.forEach(item => {
+                    const regionElement = item.querySelector(".region");
+                    if (regionElement) {
+                        if (selectedRegion === "모든 지역" || regionElement.textContent === selectedRegion) {
+                            item.style.display = "";
+                        } else {
+                            item.style.display = "none";
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
