@@ -9,19 +9,56 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            $.getJSON('http://api.openweathermap.org/data/2.5/weather?id=1835848&appid=a71cf8f55278a20a0840a3e6fcba9384&units=metric', function(data) {
+            const weatherApiKey = 'a71cf8f55278a20a0840a3e6fcba9384';
+            const cityId = 1835848; // 서울의 도시 ID
+            const lat = 37.5665; // 서울의 위도
+            const lon = 126.9780; // 서울의 경도
+
+            // 현재 날씨 데이터 가져오기
+            $.getJSON(`http://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${weatherApiKey}&units=metric`, function(data) {
                 var minTemp = data.main.temp_min.toFixed(1);
                 var maxTemp = data.main.temp_max.toFixed(1);
                 var currentTemp = data.main.temp.toFixed(1);
                 var weatherIcon = data.weather[0].icon;
                 var now = new Date();
-                var formattedDate = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate() + ' ' + now.getHours() + ':' + now.getMinutes();
+                var formattedDate = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate() + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
 
                 $('.low-temp').text(minTemp + '°C');
                 $('.high-temp').text(maxTemp + '°C');
                 $('#current-temp').text(currentTemp + '°C');
                 $('.weather-icon').html('<img src="https://openweathermap.org/img/wn/' + weatherIcon + '@2x.png" alt="Weather Icon">');
                 $('#current-date').text(formattedDate);
+            });
+
+            // 주간 예보 데이터 가져오기
+            $.getJSON(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely,current,alerts&appid=${weatherApiKey}&units=metric`, function(data) {
+                var weeklyForecastHtml = '';
+                data.daily.forEach(function(day) {
+                    var date = new Date(day.dt * 1000);
+                    var dayOfWeek = date.toLocaleDateString('ko-KR', { weekday: 'long' });
+                    var temp = day.temp.day.toFixed(1);
+                    var weatherDescription = day.weather[0].description;
+                    var weatherIcon = day.weather[0].icon;
+                    weeklyForecastHtml += `<li>${dayOfWeek}: ${temp}°C, ${weatherDescription} <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather Icon"></li>`;
+                });
+                $('#weekly-forecast').html(weeklyForecastHtml);
+            }).fail(function(jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("주간 예보 요청 실패: " + err); // 에러 로그 확인
+                $('#weekly-forecast').html('<li>주간 예보 데이터를 불러오는 데 실패했습니다.</li>');
+            });
+
+            // 시간별 예보 데이터 가져오기
+            $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?id=${cityId}&appid=${weatherApiKey}&units=metric`, function(data) {
+                var hourlyForecastHtml = '';
+                data.list.slice(0, 5).forEach(function(hour) {
+                    var date = new Date(hour.dt * 1000);
+                    var hours = date.getHours();
+                    var temp = hour.main.temp.toFixed(1);
+                    var weatherIcon = hour.weather[0].icon;
+                    hourlyForecastHtml += `<li>${hours}시: ${temp}°C <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather Icon"></li>`;
+                });
+                $('#hourly-forecast').html(hourlyForecastHtml);
             });
         });
     </script>
@@ -71,25 +108,11 @@
         <section class="forecast">
             <div class="weekly-forecast">
                 <h2>주간예보</h2>
-                <ul id="weekly-forecast">
-                    <li>일: 22°C</li>
-                    <li>월: 24°C</li>
-                    <li>화: 21°C</li>
-                    <li>수: 23°C</li>
-                    <li>목: 20°C</li>
-                    <li>금: 19°C</li>
-                    <li>토: 25°C</li>
-                </ul>
+                <ul id="weekly-forecast"></ul>
             </div>
             <div class="hourly-forecast">
                 <h2>시간별 예보</h2>
-                <ul id="hourly-forecast">
-                    <li>9시: 21°C</li>
-                    <li>12시: 24°C</li>
-                    <li>15시: 26°C</li>
-                    <li>18시: 23°C</li>
-                    <li>21시: 20°C</li>
-                </ul>
+                <ul id="hourly-forecast"></ul>
             </div>
         </section>
     </main>

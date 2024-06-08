@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const apiKey = "a71cf8f55278a20a0840a3e6fcba9384"; // 여기에 OpenWeatherMap API 키를 입력하세요.
+    const weatherApiKey = 'a71cf8f55278a20a0840a3e6fcba9384'; // OpenWeatherMap API 키
     const cityId = 1835848; // 서울의 도시 ID
 
-    // OpenWeatherMap API 호출
-    fetch(`http://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${apiKey}&units=metric`)
+    // OpenWeatherMap API 호출 - 현재 날씨
+    fetch(`http://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${weatherApiKey}&units=metric`)
         .then(response => response.json())
         .then(data => {
             const minTemp = data.main.temp_min.toFixed(1); // 최저 온도
@@ -11,16 +11,36 @@ document.addEventListener("DOMContentLoaded", () => {
             const currentTemp = data.main.temp.toFixed(1); // 현재 온도
             const weatherIcon = data.weather[0].icon;
             const now = new Date();
-            const currentDate = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+            const formattedDate = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
 
             // HTML 요소 업데이트
-            document.getElementById('low-temp').textContent = `${minTemp}°C`;
-            document.getElementById('high-temp').textContent = `${maxTemp}°C`;
-            document.getElementById('current-temp').textContent = `현재 온도: ${currentTemp}°C`;
-            document.getElementById('current-icon').innerHTML = `<img src="https://openweathermap.org/img/w/${weatherIcon}.png" alt="Weather icon">`;
-            document.getElementById('current-date').textContent = currentDate;
+            document.querySelector('.low-temp').textContent = `${minTemp}°C`;
+            document.querySelector('.high-temp').textContent = `${maxTemp}°C`;
+            document.getElementById('current-temp').textContent = `${currentTemp}°C`;
+            document.querySelector('.weather-icon').innerHTML = `<img src="https://openweathermap.org/img/wn/${weatherIcon}@2x.png" alt="Weather icon">`;
+            document.getElementById('current-date').textContent = formattedDate;
         })
         .catch(error => console.error('Error fetching weather data:', error));
+
+    // OpenWeatherMap API 호출 - 주간 예보
+    fetch(`https://api.openweathermap.org/data/2.5/forecast/daily?id=${cityId}&cnt=7&appid=${weatherApiKey}&units=metric`)
+        .then(response => response.json())
+        .then(data => {
+            const weeklyForecast = document.getElementById('weekly-forecast');
+            weeklyForecast.innerHTML = ''; // 기존 내용 삭제
+
+            data.list.forEach(day => {
+                const date = new Date(day.dt * 1000);
+                const dayOfWeek = date.toLocaleDateString('ko-KR', { weekday: 'short' });
+                const temp = day.temp.day.toFixed(1);
+                const weatherIcon = day.weather[0].icon;
+
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `${dayOfWeek}: ${temp}°C <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather icon">`;
+                weeklyForecast.appendChild(listItem);
+            });
+        })
+        .catch(error => console.error('Error fetching weekly forecast:', error));
 
     // 댓글 기능
     const commentForm = document.getElementById('comment-form');
