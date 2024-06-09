@@ -10,12 +10,18 @@
     <script>
         $(document).ready(function() {
             const weatherApiKey = 'a71cf8f55278a20a0840a3e6fcba9384';
-            const cityId = 1835848; // 서울의 도시 ID
-            const lat = 37.5665; // 서울의 위도
-            const lon = 126.9780; // 서울의 경도
+            let lat = 37.5665; // 서울의 위도
+            let lon = 126.9780; // 서울의 경도
+
+            // URL 파라미터에서 lat와 lon 값을 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('lat') && urlParams.has('lon')) {
+                lat = urlParams.get('lat');
+                lon = urlParams.get('lon');
+            }
 
             // 현재 날씨 데이터 가져오기
-            $.getJSON(`http://api.openweathermap.org/data/2.5/weather?id=${cityId}&appid=${weatherApiKey}&units=metric`, function(data) {
+            $.getJSON(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`, function(data) {
                 var minTemp = data.main.temp_min.toFixed(1);
                 var maxTemp = data.main.temp_max.toFixed(1);
                 var currentTemp = data.main.temp.toFixed(1);
@@ -49,7 +55,7 @@
             });
 
             // 시간별 예보 데이터 가져오기
-            $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?id=${cityId}&appid=${weatherApiKey}&units=metric`, function(data) {
+            $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`, function(data) {
                 var hourlyForecastHtml = '';
                 data.list.slice(0, 5).forEach(function(hour) {
                     var date = new Date(hour.dt * 1000);
@@ -70,7 +76,7 @@
             <span class="location-icon">📍</span>
             <span id="location-name">서울</span>
         </div>
-        <a href="/location_search.html" class="search-location">지역검색</a>
+        <a href="/location_search" class="search-location">지역검색</a>
     </header>
     <nav>
         <ul>

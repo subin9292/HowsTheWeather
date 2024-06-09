@@ -83,8 +83,10 @@ def coordinates(place: str):
     if not results.empty:
         result = results.iloc[0]
         nx, ny = result['격자 X'], result['격자 Y']
+        lat = result['위도(시)'] + result['위도(분)'] / 60 + result['위도(초)'] / 3600
+        lon = result['경도(시)'] + result['경도(분)'] / 60 + result['경도(초)'] / 3600
         print(f"Coordinates for {place}: (X: {nx}, Y: {ny})")
-        return {"message": f"Coordinates for {place} are X: {nx}, Y: {ny}"}
+        return {"message": f"Coordinates for {place} are X: {nx}, Y: {ny}", "coordinates": {"lat": lat, "lon": lon}}
     else:
         raise HTTPException(status_code=404, detail="Location not found")
 
