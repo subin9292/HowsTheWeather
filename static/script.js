@@ -31,12 +31,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             data.list.forEach(day => {
                 const date = new Date(day.dt * 1000);
-                const dayOfWeek = date.toLocaleDateString('ko-KR', { weekday: 'short' });
+                const dayOfWeek = `${date.getMonth() + 1}/${date.getDate()} (${['일', '월', '화', '수', '목', '금', '토'][date.getDay()]})`;
                 const temp = day.temp.day.toFixed(1);
+                const weatherDescription = translateWeatherDescription(day.weather[0].description);
                 const weatherIcon = day.weather[0].icon;
 
                 const listItem = document.createElement('li');
-                listItem.innerHTML = `${dayOfWeek}: ${temp}°C <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather icon">`;
+                listItem.innerHTML = `${dayOfWeek}: ${temp}°C, ${weatherDescription} <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather icon">`;
                 weeklyForecast.appendChild(listItem);
             });
         })
@@ -64,3 +65,22 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(error => console.error('Error submitting comment:', error));
     });
 });
+
+function translateWeatherDescription(description) {
+    const descriptions = {
+        "clear sky": "맑음",
+        "few clouds": "구름 조금",
+        "scattered clouds": "구름 낌",
+        "broken clouds": "구름 많음",
+        "shower rain": "소나기",
+        "rain": "비",
+        "thunderstorm": "천둥번개",
+        "snow": "눈",
+        "mist": "안개",
+        "light rain": "약한 비",
+        "moderate rain": "보통 비",
+        "heavy intensity rain": "강한 비",
+        "overcast clouds": "흐림"
+    };
+    return descriptions[description] || description;
+}

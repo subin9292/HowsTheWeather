@@ -41,9 +41,9 @@
                 var weeklyForecastHtml = '';
                 data.daily.forEach(function(day) {
                     var date = new Date(day.dt * 1000);
-                    var dayOfWeek = date.toLocaleDateString('ko-KR', { weekday: 'long' });
+                    var dayOfWeek = `${date.getMonth() + 1}/${date.getDate()} (${['일', '월', '화', '수', '목', '금', '토'][date.getDay()]})`;
                     var temp = day.temp.day.toFixed(1);
-                    var weatherDescription = day.weather[0].description;
+                    var weatherDescription = translateWeatherDescription(day.weather[0].description);
                     var weatherIcon = day.weather[0].icon;
                     weeklyForecastHtml += `<li>${dayOfWeek}: ${temp}°C, ${weatherDescription} <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather Icon"></li>`;
                 });
@@ -67,6 +67,25 @@
                 $('#hourly-forecast').html(hourlyForecastHtml);
             });
         });
+
+        function translateWeatherDescription(description) {
+            const descriptions = {
+                "clear sky": "맑음",
+                "few clouds": "구름 조금",
+                "scattered clouds": "구름 낌",
+                "broken clouds": "구름 많음",
+                "shower rain": "소나기",
+                "rain": "비",
+                "thunderstorm": "천둥번개",
+                "snow": "눈",
+                "mist": "안개",
+                "light rain": "약한 비",
+                "moderate rain": "보통 비",
+                "heavy intensity rain": "강한 비",
+                "overcast clouds": "흐림"
+            };
+            return descriptions[description] || description;
+        }
     </script>
 </head>
 <body>
