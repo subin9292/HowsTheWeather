@@ -82,7 +82,7 @@
                         const coordinates = data.coordinates;
                         const lat = coordinates.lat;
                         const lon = coordinates.lon;
-                        window.location.href = `/main.html?lat=${lat}&lon=${lon}`;
+                        window.location.href = `/main.html?lat=${lat}&lon=${lon}&place=${encodeURIComponent(placeName)}`;
                     }
                 }
             });

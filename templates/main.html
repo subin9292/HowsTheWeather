@@ -12,13 +12,20 @@
             const weatherApiKey = 'a71cf8f55278a20a0840a3e6fcba9384';
             let lat = 37.5665; // 서울의 위도
             let lon = 126.9780; // 서울의 경도
+            let placeName = '서울'; // 기본 지역 이름
 
-            // URL 파라미터에서 lat와 lon 값을 가져오기
+            // URL 파라미터에서 lat와 lon, place 값을 가져오기
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('lat') && urlParams.has('lon')) {
                 lat = urlParams.get('lat');
                 lon = urlParams.get('lon');
             }
+            if (urlParams.has('place')) {
+                placeName = decodeURIComponent(urlParams.get('place'));
+            }
+
+            // 지역 이름 업데이트
+            $('#location-name').text(placeName);
 
             // 현재 날씨 데이터 가져오기
             $.getJSON(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`, function(data) {
