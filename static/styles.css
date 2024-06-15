@@ -6,11 +6,12 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #f3f4f6;
+    background-color: #f8f9fa;
+    color: #212529;
 }
 
 header {
-    background-color: #4CAF50;
+    background-color: #343a40;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -46,7 +47,7 @@ nav ul {
     padding: 0;
     display: flex;
     justify-content: center;
-    background-color: #f1f1f1;
+    background-color: #343a40;
     margin: 0;
     padding: 1em 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -58,7 +59,7 @@ nav ul li {
 
 nav ul li a {
     text-decoration: none;
-    color: #333;
+    color: #f8f9fa;
     font-weight: bold;
 }
 
@@ -129,7 +130,7 @@ main {
 #comment-form button {
     padding: 0.5em 1em;
     border: none;
-    background-color: #4CAF50;
+    background-color: #343a40;
     color: white;
     border-radius: 4px;
     cursor: pointer;
@@ -137,12 +138,12 @@ main {
 }
 
 #comment-form button:hover {
-    background-color: #45a049;
+    background-color: #495057;
 }
 
 .temperature-range {
     font-size: 1.5em;
-    color: #4CAF50;
+    color: #212529;
 }
 
 .current-temp {

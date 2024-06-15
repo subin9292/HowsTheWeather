@@ -55,6 +55,7 @@
                     var minTemp = data.main.temp_min.toFixed(1);
                     var maxTemp = data.main.temp_max.toFixed(1);
                     var currentTemp = data.main.temp.toFixed(1);
+                    var weatherDescription = translateWeatherDescription(data.weather[0].description);
                     var weatherIcon = data.weather[0].icon;
                     var now = new Date();
                     var formattedDate = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate() + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
@@ -62,7 +63,7 @@
                     $('.low-temp').text(minTemp + '°C');
                     $('.high-temp').text(maxTemp + '°C');
                     $('#current-temp').text(currentTemp + '°C');
-                    $('.weather-icon').html('<img src="https://openweathermap.org/img/wn/' + weatherIcon + '@2x.png" alt="Weather Icon">');
+                    $('.weather-icon').html('<img src="https://openweathermap.org/img/wn/' + weatherIcon + '@2x.png" alt="Weather icon">');
                     $('#current-date').text(formattedDate);
                 });
 
@@ -75,7 +76,7 @@
                         var temp = day.temp.day.toFixed(1);
                         var weatherDescription = translateWeatherDescription(day.weather[0].description);
                         var weatherIcon = day.weather[0].icon;
-                        weeklyForecastHtml += `<li>${dayOfWeek}: ${temp}°C, ${weatherDescription} <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather Icon"></li>`;
+                        weeklyForecastHtml += `<li>${dayOfWeek}: ${temp}°C, ${weatherDescription} <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather icon"></li>`;
                     });
                     $('#weekly-forecast').html(weeklyForecastHtml);
                 }).fail(function(jqxhr, textStatus, error) {
@@ -92,7 +93,7 @@
                         var hours = date.getHours();
                         var temp = hour.main.temp.toFixed(1);
                         var weatherIcon = hour.weather[0].icon;
-                        hourlyForecastHtml += `<li>${hours}시: ${temp}°C <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather Icon"></li>`;
+                        hourlyForecastHtml += `<li>${hours}시: ${temp}°C <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather icon"></li>`;
                     });
                     $('#hourly-forecast').html(hourlyForecastHtml);
                 });
