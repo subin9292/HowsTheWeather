@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +7,6 @@
     <title>HowsTheWeather</title>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
-
 <body>
     <header>
         <div class="logo">HowsTheWeather</div>
@@ -53,17 +51,22 @@
     
         <section class="weekly-forecast">
             <h2>주간 예보</h2>
-
-                <tr>
-                    <th>날짜</th>
-                    <th>온도</th>
-                    <th>날씨</th>
-                </tr>
-
+            <table>
+                <thead>
+                    <tr>
+                        <th>날짜</th>
+                        <th>온도</th>
+                        <th>날씨</th>
+                    </tr>
+                </thead>
+                <tbody id="weekly-forecast-body">
+                    <!-- Weekly forecast rows will be added dynamically -->
+                </tbody>
+            </table>
         </section>
     
         <section class="hourly-forecast">
-            <h2>시간별 예보 48시간</h2>
+            <h2>시간별 예보</h2>
             <table>
                 <thead>
                     <tr>
@@ -72,114 +75,14 @@
                     </tr>
                 </thead>
                 <tbody id="hourly-forecast-body">
-                    <!-- Hourly forecast rows will be dynamically added here -->
+                    <!-- Hourly forecast rows will be added dynamically -->
                 </tbody>
             </table>
         </section>
     </main>
-    
 
-    <!-- icon등은 여기 참고 https://openweathermap.org/current#list -->
-
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-
+    <!-- Weather icon and description translations -->
     <script>
-        var apiKey = 'a71cf8f55278a20a0840a3e6fcba9384';
-        var city = 'Seoul';
-        var lat = 37.5683;
-        var lon = 126.9778;
-
-        // 현재 날씨 가져오기
-        $.getJSON(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`, function(result) {
-            $('.ctemp').append(result.main.temp);
-            $('.lowtemp').append(result.main.temp_min);
-            $('.hightemp').append(result.main.temp_max);
-            var wiconUrl = '<img src="https://openweathermap.org/img/wn/' + result.weather[0].icon + '.png" alt="' + result.weather[0].description + '">';
-            $('.icon').append(wiconUrl);
-
-            var ct = result.dt;
-            function convertTime(t) {
-                var ot = new Date(t * 1000);
-                var y = ot.getFullYear();
-                var mon = ot.getMonth() + 1;
-                var dt = ot.getDate();
-                var days = ["일", "월", "화", "수", "목", "금", "토"];
-                var day = days[ot.getDay()];
-                var hr = ot.getHours();
-                var min = ot.getMinutes();
-
-                return y + '/' + mon + '/' + dt + ' (' + day + ') ' + hr + ':' + (min < 10 ? '0' + min : min);
-            }
-
-            var currentTime = convertTime(ct);
-            $('.time').append(currentTime);
-        });
-
-        // 48시간 시간별 예보 가져오기
-        $.getJSON(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`, function(result) {
-            function convertTime(ctime){
-                var ot = new Date(ctime * 1000); // jQuery new Date : 밀리초로 가져온걸 가지고 보기쉽게 추출해줌
-                var mon = ot.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1 해줌
-                var dt = ot.getDate();
-                var hr = ot.getHours();
-                
-                return mon + '/' + dt + '  ' + hr + '시';
-            }
-
-            for(var i = 0; i < 48; i++){
-                var ctime = result.hourly[i].dt;
-                var ctemp = result.hourly[i].temp;
-                
-                var currentTime = convertTime(ctime);
-                var tableHtml = '<tr>' +
-                                '<td>'+currentTime+'</td>' +
-                                '<td>'+ctemp+'</td>' +
-                                '</tr>';
-                
-                $('tbody').append(tableHtml);
-            }
-
-            // 주간 예보 가져오기
-            var weeklyForecast = result.daily;
-            weeklyForecast.forEach(function(day) {
-                var date = new Date(day.dt * 1000);
-                var dayOfWeek = `${date.getMonth() + 1}/${date.getDate()} (${['일', '월', '화', '수', '목', '금', '토'][date.getDay()]})`;
-                var temp = day.temp.day.toFixed(1);
-                var weatherDescription = day.weather[0].description;
-                var weatherIcon = day.weather[0].icon;
-                var weeklyHtml = '<tr>' +
-                    '<td>' + dayOfWeek + '</td>' +
-                    '<td>' + temp + '°C' + '</td>' +
-                    '<td><img src="https://openweathermap.org/img/wn/' + weatherIcon + '.png" alt="' + weatherDescription + '">' + weatherDescription + '</td>' +
-                    '</tr>';
-
-                $('.weekly-forecast').append(weeklyHtml);
-            });
-        });
-
-        // 댓글 기능
-        const commentForm = document.getElementById('comment-form');
-        commentForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const formData = new FormData(commentForm);
-            fetch('/comments/', {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.text();
-                } else {
-                    throw new Error('Failed to submit comment');
-                }
-            })
-            .then(() => {
-                window.location.reload();
-            })
-            .catch(error => console.error('Error submitting comment:', error));
-        });
-
-        // 날씨 설명 번역
         function translateWeatherDescription(description) {
             const descriptions = {
                 "clear sky": "맑음",
@@ -199,6 +102,89 @@
             return descriptions[description] || description;
         }
     </script>
-</body>
 
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+    <!-- JavaScript for fetching weather data -->
+    <script>
+        var apiKey = 'a71cf8f55278a20a0840a3e6fcba9384';
+        var lat = 37.5683;
+        var lon = 126.9778;
+
+        // Fetch current weather and fill in the details
+        $.getJSON(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`, function(result) {
+            $('.ctemp').text(`현재 온도: ${result.main.temp}°C`);
+            $('.lowtemp').text(`최저 온도: ${result.main.temp_min}°C`);
+            $('.hightemp').text(`최고 온도: ${result.main.temp_max}°C`);
+            $('.icon').html(`<img src="https://openweathermap.org/img/wn/${result.weather[0].icon}.png" alt="${result.weather[0].description}">`);
+            
+            var timestamp = result.dt;
+            var currentTime = new Date(timestamp * 1000);
+            var formattedTime = `${currentTime.getFullYear()}/${currentTime.getMonth() + 1}/${currentTime.getDate()} (${['일', '월', '화', '수', '목', '금', '토'][currentTime.getDay()]}), ${currentTime.getHours()}:${currentTime.getMinutes().toString().padStart(2, '0')}`;
+            $('.time').text(`현재 시간: ${formattedTime}`);
+        });
+
+        // Fetch weekly forecast
+        $.getJSON(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly&appid=${apiKey}&units=metric`, function(result) {
+            var weeklyForecast = result.daily;
+
+            weeklyForecast.forEach(function(day) {
+                var date = new Date(day.dt * 1000);
+                var dayOfWeek = `${date.getMonth() + 1}/${date.getDate()} (${['일', '월', '화', '수', '목', '금', '토'][date.getDay()]})`;
+                var tempMin = day.temp.min.toFixed(1);
+                var tempMax = day.temp.max.toFixed(1);
+                var weatherDescription = translateWeatherDescription(day.weather[0].description);
+                var weatherIcon = day.weather[0].icon;
+
+                var weeklyHtml = `<tr>
+                                    <td>${dayOfWeek}</td>
+                                    <td>최저: ${tempMin}°C / 최고: ${tempMax}°C</td>
+                                    <td><img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="${weatherDescription}">${weatherDescription}</td>
+                                  </tr>`;
+
+                $('#weekly-forecast-body').append(weeklyHtml);
+            });
+        });
+
+        // Fetch hourly forecast for 48 hours
+        $.getJSON(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,daily&appid=${apiKey}&units=metric`, function(result) {
+            var hourlyForecast = result.hourly.slice(0, 48);
+
+            hourlyForecast.forEach(function(hour) {
+                var date = new Date(hour.dt * 1000);
+                var dt = date.getDate();
+                var hourOfDay = date.getHours();
+                var temp = hour.temp.toFixed(1);
+                
+                var hourlyHtml = `<tr>
+                                    <td>${dt}일</td>
+                                    <td>${hourOfDay}시</td>
+                                    <td>${temp}°C</td>
+                                  </tr>`;
+
+                $('#hourly-forecast-body').append(hourlyHtml);
+            });
+        });
+
+        // Comment submission handling
+        $('#comment-form').submit(function(event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: '/comments/',
+                data: formData,
+                success: function(response) {
+                    console.log('Comment submitted successfully');
+                    window.location.reload();
+                },
+                error: function(error) {
+                    console.error('Error submitting comment:', error);
+                }
+            });
+        });
+    </script>
+</body>
 </html>
