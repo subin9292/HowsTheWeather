@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request, Depends, Form
+from fastapi import FastAPI, Request, Depends, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -92,4 +92,6 @@ def coordinates(place: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=5500, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=5500, reload=True)
+
+

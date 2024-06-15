@@ -10,89 +10,113 @@
     <script>
         $(document).ready(function() {
             const weatherApiKey = 'a71cf8f55278a20a0840a3e6fcba9384';
-            let lat = 37.5665; // 서울의 위도
-            let lon = 126.9780; // 서울의 경도
-            let placeName = '서울'; // 기본 지역 이름
+            let lat;
+            let lon;
+            let placeName = '현재 위치'; // 기본 지역 이름
 
             // URL 파라미터에서 lat와 lon, place 값을 가져오기
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('lat') && urlParams.has('lon')) {
                 lat = urlParams.get('lat');
                 lon = urlParams.get('lon');
+                if (urlParams.has('place')) {
+                    placeName = decodeURIComponent(urlParams.get('place'));
+                }
+                // 위치가 제공된 경우, 해당 위치의 날씨 정보 불러오기
+                loadWeatherData(lat, lon, placeName);
+            } else {
+                // 위치 정보가 없는 경우, 사용자 위치를 기반으로 날씨 정보 불러오기
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        lat = position.coords.latitude;
+                        lon = position.coords.longitude;
+                        loadWeatherData(lat, lon, placeName);
+                    }, error => {
+                        console.error('Error occurred. Error code: ' + error.code);
+                        // 기본값으로 서울의 날씨 정보를 불러옵니다.
+                        lat = 37.5665;
+                        lon = 126.9780;
+                        loadWeatherData(lat, lon, '서울');
+                    });
+                } else {
+                    // Geolocation을 지원하지 않는 경우 기본값으로 서울의 날씨 정보를 불러옵니다.
+                    lat = 37.5665;
+                    lon = 126.9780;
+                    loadWeatherData(lat, lon, '서울');
+                }
             }
-            if (urlParams.has('place')) {
-                placeName = decodeURIComponent(urlParams.get('place'));
+
+            function loadWeatherData(lat, lon, placeName) {
+                // 지역 이름 업데이트
+                $('#location-name').text(placeName);
+
+                // 현재 날씨 데이터 가져오기
+                $.getJSON(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`, function(data) {
+                    var minTemp = data.main.temp_min.toFixed(1);
+                    var maxTemp = data.main.temp_max.toFixed(1);
+                    var currentTemp = data.main.temp.toFixed(1);
+                    var weatherIcon = data.weather[0].icon;
+                    var now = new Date();
+                    var formattedDate = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate() + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+
+                    $('.low-temp').text(minTemp + '°C');
+                    $('.high-temp').text(maxTemp + '°C');
+                    $('#current-temp').text(currentTemp + '°C');
+                    $('.weather-icon').html('<img src="https://openweathermap.org/img/wn/' + weatherIcon + '@2x.png" alt="Weather Icon">');
+                    $('#current-date').text(formattedDate);
+                });
+
+                // 주간 예보 데이터 가져오기
+                $.getJSON(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely,current,alerts&appid=${weatherApiKey}&units=metric`, function(data) {
+                    var weeklyForecastHtml = '';
+                    data.daily.forEach(function(day) {
+                        var date = new Date(day.dt * 1000);
+                        var dayOfWeek = `${date.getMonth() + 1}/${date.getDate()} (${['일', '월', '화', '수', '목', '금', '토'][date.getDay()]})`;
+                        var temp = day.temp.day.toFixed(1);
+                        var weatherDescription = translateWeatherDescription(day.weather[0].description);
+                        var weatherIcon = day.weather[0].icon;
+                        weeklyForecastHtml += `<li>${dayOfWeek}: ${temp}°C, ${weatherDescription} <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather Icon"></li>`;
+                    });
+                    $('#weekly-forecast').html(weeklyForecastHtml);
+                }).fail(function(jqxhr, textStatus, error) {
+                    var err = textStatus + ", " + error;
+                    console.log("주간 예보 요청 실패: " + err); // 에러 로그 확인
+                    $('#weekly-forecast').html('<li>주간 예보 데이터를 불러오는 데 실패했습니다.</li>');
+                });
+
+                // 시간별 예보 데이터 가져오기
+                $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`, function(data) {
+                    var hourlyForecastHtml = '';
+                    data.list.slice(0, 5).forEach(function(hour) {
+                        var date = new Date(hour.dt * 1000);
+                        var hours = date.getHours();
+                        var temp = hour.main.temp.toFixed(1);
+                        var weatherIcon = hour.weather[0].icon;
+                        hourlyForecastHtml += `<li>${hours}시: ${temp}°C <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather Icon"></li>`;
+                    });
+                    $('#hourly-forecast').html(hourlyForecastHtml);
+                });
             }
 
-            // 지역 이름 업데이트
-            $('#location-name').text(placeName);
-
-            // 현재 날씨 데이터 가져오기
-            $.getJSON(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`, function(data) {
-                var minTemp = data.main.temp_min.toFixed(1);
-                var maxTemp = data.main.temp_max.toFixed(1);
-                var currentTemp = data.main.temp.toFixed(1);
-                var weatherIcon = data.weather[0].icon;
-                var now = new Date();
-                var formattedDate = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate() + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
-
-                $('.low-temp').text(minTemp + '°C');
-                $('.high-temp').text(maxTemp + '°C');
-                $('#current-temp').text(currentTemp + '°C');
-                $('.weather-icon').html('<img src="https://openweathermap.org/img/wn/' + weatherIcon + '@2x.png" alt="Weather Icon">');
-                $('#current-date').text(formattedDate);
-            });
-
-            // 주간 예보 데이터 가져오기
-            $.getJSON(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely,current,alerts&appid=${weatherApiKey}&units=metric`, function(data) {
-                var weeklyForecastHtml = '';
-                data.daily.forEach(function(day) {
-                    var date = new Date(day.dt * 1000);
-                    var dayOfWeek = `${date.getMonth() + 1}/${date.getDate()} (${['일', '월', '화', '수', '목', '금', '토'][date.getDay()]})`;
-                    var temp = day.temp.day.toFixed(1);
-                    var weatherDescription = translateWeatherDescription(day.weather[0].description);
-                    var weatherIcon = day.weather[0].icon;
-                    weeklyForecastHtml += `<li>${dayOfWeek}: ${temp}°C, ${weatherDescription} <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather Icon"></li>`;
-                });
-                $('#weekly-forecast').html(weeklyForecastHtml);
-            }).fail(function(jqxhr, textStatus, error) {
-                var err = textStatus + ", " + error;
-                console.log("주간 예보 요청 실패: " + err); // 에러 로그 확인
-                $('#weekly-forecast').html('<li>주간 예보 데이터를 불러오는 데 실패했습니다.</li>');
-            });
-
-            // 시간별 예보 데이터 가져오기
-            $.getJSON(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`, function(data) {
-                var hourlyForecastHtml = '';
-                data.list.slice(0, 5).forEach(function(hour) {
-                    var date = new Date(hour.dt * 1000);
-                    var hours = date.getHours();
-                    var temp = hour.main.temp.toFixed(1);
-                    var weatherIcon = hour.weather[0].icon;
-                    hourlyForecastHtml += `<li>${hours}시: ${temp}°C <img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather Icon"></li>`;
-                });
-                $('#hourly-forecast').html(hourlyForecastHtml);
-            });
+            function translateWeatherDescription(description) {
+                const descriptions = {
+                    "clear sky": "맑음",
+                    "few clouds": "구름 조금",
+                    "scattered clouds": "구름 낌",
+                    "broken clouds": "구름 많음",
+                    "shower rain": "소나기",
+                    "rain": "비",
+                    "thunderstorm": "천둥번개",
+                    "snow": "눈",
+                    "mist": "안개",
+                    "light rain": "약한 비",
+                    "moderate rain": "보통 비",
+                    "heavy intensity rain": "강한 비",
+                    "overcast clouds": "흐림"
+                };
+                return descriptions[description] || description;
+            }
         });
-
-        function translateWeatherDescription(description) {
-            const descriptions = {
-                "clear sky": "맑음",
-                "few clouds": "구름 조금",
-                "scattered clouds": "구름 낌",
-                "broken clouds": "구름 많음",
-                "shower rain": "소나기",
-                "rain": "비",
-                "thunderstorm": "천둥번개",
-                "snow": "눈",
-                "mist": "안개",
-                "light rain": "약한 비",
-                "moderate rain": "보통 비",
-                "heavy intensity rain": "강한 비",
-                "overcast clouds": "흐림"
-            };
-            return descriptions[description] || description;
-        }
     </script>
 </head>
 <body>
@@ -100,7 +124,7 @@
         <div class="logo">HowsTheWeather</div>
         <div class="location">
             <span class="location-icon">📍</span>
-            <span id="location-name">서울</span>
+            <span id="location-name">현재 위치</span>
         </div>
         <a href="/location_search" class="search-location">지역검색</a>
     </header>
