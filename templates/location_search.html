@@ -65,7 +65,6 @@
                     const response = await fetch(`/search?query=${query}`);
                     const data = await response.json();
                     const filteredLocations = data.places;
-                    filteredLocations
                     filteredLocations.forEach(location => {
                         const li = document.createElement('li');
                         li.textContent = location;
@@ -79,13 +78,12 @@
                     const placeName = event.target.textContent;
                     const response = await fetch(`/coordinates?place=${placeName}`);
                     const data = await response.json();
-                    if (data.message) {
-                        alert(data.message);
+                    if (data.coordinates) {
+                        const coordinates = data.coordinates;
+                        const lat = coordinates.lat;
+                        const lon = coordinates.lon;
+                        window.location.href = `/main.html?lat=${lat}&lon=${lon}`;
                     }
-                    const coordinates = data.coordinates;
-                    const lat = coordinates.lat;
-                    const lon = coordinates.lon;
-                    window.location.href = `/main.html?lat=${lat}&lon=${lon}`;
                 }
             });
         });
