@@ -1,17 +1,20 @@
-/* Import Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
 body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat'; /* ONE-Mobile-POP 폰트를 우선적으로 적용 */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #f3f4f6;
-    color: #333;
+    background-image: url('/static/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    
 }
 
+
 header {
-    background-color: #2C3E50;
+    background-color: #86a4ff;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,6 +24,7 @@ header {
 
 .logo {
     font-size: 1.5em;
+    color: #4f49c3;
     font-weight: bold;
 }
 
@@ -37,9 +41,14 @@ header {
 }
 
 .search-location {
-    color: white;
+    color: #fff;
     text-decoration: none;
     font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.search-location:hover {
+    color: #e8ecff;
 }
 
 nav ul {
@@ -47,7 +56,7 @@ nav ul {
     padding: 0;
     display: flex;
     justify-content: center;
-    background-color: #34495E;
+    background-color: #86a4ff;
     margin: 0;
     padding: 1em 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -61,6 +70,11 @@ nav ul li a {
     text-decoration: none;
     color: white;
     font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #e8ecff;
 }
 
 main {
@@ -76,15 +90,31 @@ main {
 }
 
 .card {
-    background-color: white;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.443);
+    border: 2px solid rgba(160, 176, 188, 0.215);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
     padding: 2em;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(188, 194, 200, 0.1);
     width: 48%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     height: 300px; /* Set a fixed height for consistency */
+    
+}
+
+/* 현재날씨, 시간별예보, 주간예보, 실시간댓글 섹션 제목 변경 및 위치 조정 */
+.current-weather h2,
+.weekly-forecast h2,
+.hourly-forecast h2,
+.live-comments h2 {
+    font-family: 'Montserrat'; 
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 1em;
+    margin-top: -10px; /* 제목을 위로 올리는 부분 */
+    color: #2C3E50; /* 제목 글자 색상 변경 */
 }
 
 .live-comments {
@@ -128,20 +158,21 @@ main {
 #comment-form button {
     padding: 0.5em 1em;
     border: none;
-    background-color: #2980B9;
+    background-color: #86a4ff;
     color: white;
     border-radius: 4px;
     cursor: pointer;
     align-self: flex-end;
+    transition: background-color 0.3s ease;
 }
 
 #comment-form button:hover {
-    background-color: #3498DB;
+    background-color: #4f49c3;
 }
 
 .temperature-range {
     font-size: 1.5em;
-    color: #2980B9;
+    color: #2C3E50;
 }
 
 .current-temp {
@@ -178,11 +209,34 @@ main {
 
 .weekly-forecast table th, .hourly-forecast table th,
 .weekly-forecast table td, .hourly-forecast table td {
-    border: 1px solid #ddd;
+    border: 1px solid #e8ecff;
     padding: 0.5em;
     text-align: center;
 }
 
 .weekly-forecast table th, .hourly-forecast table th {
-    background-color: #f4f4f4;
+    background-color: #86a4ff;
 }
+/* 스크롤바 커스터마이징 */
+.table-container::-webkit-scrollbar,
+#comments-list::-webkit-scrollbar {
+    width: 10px; /* 스크롤바의 너비 */
+}
+
+.table-container::-webkit-scrollbar-track,
+#comments-list::-webkit-scrollbar-track {
+    background: #f1f1f1; /* 스크롤바 트랙의 배경색 */
+}
+
+.table-container::-webkit-scrollbar-thumb,
+#comments-list::-webkit-scrollbar-thumb {
+    background-color: #86a4ff; /* 스크롤바 자체의 색상 */
+    border-radius: 5px; /* 스크롤바 썸의 모서리 둥글기 */
+}
+
+.table-container::-webkit-scrollbar-thumb:hover,
+#comments-list::-webkit-scrollbar-thumb:hover {
+    background-color: #4f49c3; /* 마우스 호버 시 스크롤바 색상 */
+}
+
+
