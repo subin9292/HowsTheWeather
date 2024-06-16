@@ -5,8 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HowsTheWeather</title>
-    <link rel="stylesheet" href="/static/st1.css">
-    
+    <link rel="stylesheet" href="/static/style.css?after">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -14,7 +13,7 @@
         <div class="logo">HowsTheWeather</div>
         <div class="location">
             <span class="location-icon">📍</span>
-            <span id="location-name">서울</span>
+            <span id="location-name">현재 위치</span>
         </div>
         <a href="/location_search.html" class="search-location">지역검색</a>
     </header>
@@ -39,16 +38,16 @@
             </div>
             <div class="card live-comments">
                 <h2>실시간 댓글</h2>
+                <h3 id="region-title">지역의 댓글</h3>
                 <ul id="comments-list">
-                    {% for comment in comments %}
-                    <li><strong>{{ comment.name }}</strong>: {{ comment.comment }}</li>
-                    {% endfor %}
+                    <!-- Comments will be added dynamically -->
                 </ul>
                 <form id="comment-form" method="post" action="/comments/">
                     <input type="text" id="comment-name" name="name" placeholder="이름" required>
                     <input type="text" id="comment-input" name="comment" placeholder="댓글을 입력하세요..." required>
                     <button type="submit">댓글 달기</button>
                 </form>
+
             </div>
         </section>
         <section class="forecast">
@@ -121,92 +120,158 @@
 
     <!-- JavaScript for fetching weather data -->
     <script>
-        var apiKey = 'a71cf8f55278a20a0840a3e6fcba9384';
-        var lat = 37.5683;
-        var lon = 126.9778;
+        const apiKey = 'a71cf8f55278a20a0840a3e6fcba9384';
 
-        // Fetch current weather and fill in the details
-        $.getJSON(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`, function(result) {
-            $('#current-temp').text(`${result.main.temp.toFixed(1)}°C`);
-            $('.low-temp').text(`${result.main.temp_min.toFixed(1)}°C`);
-            $('.high-temp').text(`${result.main.temp_max.toFixed(1)}°C`);
-            $('.weather-icon').html(`<img src="https://openweathermap.org/img/wn/${result.weather[0].icon}@2x.png" alt="${result.weather[0].description}">`);
-            
-            var timestamp = result.dt;
-            var currentTime = new Date(timestamp * 1000);
-            var formattedTime = `${currentTime.getFullYear()}/${currentTime.getMonth() + 1}/${currentTime.getDate()} (${['일', '월', '화', '수', '목', '금', '토'][currentTime.getDay()]}) ${currentTime.getHours()}:${currentTime.getMinutes().toString().padStart(2, '0')}`;
-            $('#current-date').text(`현재 시간: ${formattedTime}`);
-        });
+        function updateWeatherAndComments(lat, lon, placeName) {
+            updateWeatherData(lat, lon, placeName);
+            fetchComments(placeName);
+        }
 
-        // Fetch weekly forecast
-        $.getJSON(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly&appid=${apiKey}&units=metric`, function(result) {
-            var weeklyForecast = result.daily;
+        function updateWeatherData(lat, lon, placeName) {
+            $('#location-name').text(placeName);
+            $('#region-title').text(`${placeName} 지역의 댓글`);
 
-            weeklyForecast.forEach(function(day) {
-                var date = new Date(day.dt * 1000);
-                var dayOfWeek = `${date.getMonth() + 1}/${date.getDate()} (${['일', '월', '화', '수', '목', '금', '토'][date.getDay()]})`;
-                var tempMin = day.temp.min.toFixed(1);
-                var tempMax = day.temp.max.toFixed(1);
-                var weatherDescription = translateWeatherDescription(day.weather[0].description);
-                var weatherIcon = day.weather[0].icon;
-
-                var weeklyHtml = `<tr>
-                                    <td>${dayOfWeek}</td>
-                                    <td>${tempMin}°C / ${tempMax}°C</td>
-                                    <td><img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="${weatherDescription}">${weatherDescription}</td>
-                                  </tr>`;
-
-                $('#weekly-forecast-body').append(weeklyHtml);
-            });
-        });
-
-        // Fetch hourly forecast for today and tomorrow
-        $.getJSON(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,daily&appid=${apiKey}&units=metric`, function(result) {
-            var hourlyForecast = result.hourly;
-
-            var now = new Date();
-            var today = now.getDate();
-            var tomorrow = new Date(now);
-            tomorrow.setDate(today + 1);
-            tomorrow = tomorrow.getDate();
-
-            hourlyForecast.forEach(function(hour) {
-                var date = new Date(hour.dt * 1000);
-                var dayOfMonth = date.getDate();
-                var formattedDate = formatDate(date);
-                var hourOfDay = date.getHours();
-                var temp = hour.temp.toFixed(1);
+            $.getJSON(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`, function(result) {
+                $('#current-temp').text(`${result.main.temp.toFixed(1)}°C`);
+                $('.low-temp').text(`${result.main.temp_min.toFixed(1)}°C`);
+                $('.high-temp').text(`${result.main.temp_max.toFixed(1)}°C`);
+                $('.weather-icon').html(`<img src="https://openweathermap.org/img/wn/${result.weather[0].icon}.png" alt="${result.weather[0].description}">`);
                 
-                if (dayOfMonth === today || dayOfMonth === tomorrow) {
-                    var hourlyHtml = `<tr>
-                                        <td>${formattedDate}</td>
-                                        <td>${hourOfDay}시</td>
-                                        <td>${temp}°C</td>
+                var timestamp = result.dt;
+                var currentTime = new Date(timestamp * 1000);
+                var formattedTime = `${currentTime.getFullYear()}/${currentTime.getMonth() + 1}/${currentTime.getDate()} (${['일', '월', '화', '수', '목', '금', '토'][currentTime.getDay()]}) ${currentTime.getHours()}:${currentTime.getMinutes().toString().padStart(2, '0')}`;
+                $('#current-date').text(`현재 시간: ${formattedTime}`);
+            });
+
+            // Fetch weekly forecast
+            $.getJSON(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly&appid=${apiKey}&units=metric`, function(result) {
+                var weeklyForecast = result.daily;
+                $('#weekly-forecast-body').empty();
+
+                weeklyForecast.forEach(function(day) {
+                    var date = new Date(day.dt * 1000);
+                    var dayOfWeek = formatDate(date);
+                    var tempMin = day.temp.min.toFixed(1);
+                    var tempMax = day.temp.max.toFixed(1);
+                    var weatherDescription = translateWeatherDescription(day.weather[0].description);
+                    var weatherIcon = day.weather[0].icon;
+
+                    var weeklyHtml = `<tr>
+                                        <td>${dayOfWeek}</td>
+                                        <td>${tempMin}°C / ${tempMax}°C</td>
+                                        <td><img src="https://openweathermap.org/img/wn/${weatherIcon}.png" alt="${weatherDescription}">${weatherDescription}</td>
                                       </tr>`;
 
-                    $('#hourly-forecast-body').append(hourlyHtml);
+                    $('#weekly-forecast-body').append(weeklyHtml);
+                });
+            });
+
+            // Fetch hourly forecast
+            $.getJSON(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,daily&appid=${apiKey}&units=metric`, function(result) {
+                var hourlyForecast = result.hourly;
+                var now = new Date();
+                var today = now.getDate();
+                var tomorrow = new Date(now);
+                tomorrow.setDate(today + 1);
+                tomorrow = tomorrow.getDate();
+                $('#hourly-forecast-body').empty();
+
+                hourlyForecast.forEach(function(hour) {
+                    var date = new Date(hour.dt * 1000);
+                    var dayOfMonth = date.getDate();
+                    var formattedDate = formatDate(date);
+                    var hourOfDay = date.getHours();
+                    var temp = hour.temp.toFixed(1);
+                    
+                    if (dayOfMonth === today || dayOfMonth === tomorrow) {
+                        var hourlyHtml = `<tr>
+                                            <td>${formattedDate}</td>
+                                            <td>${hourOfDay}시</td>
+                                            <td>${temp}°C</td>
+                                          </tr>`;
+
+                        $('#hourly-forecast-body').append(hourlyHtml);
+                    }
+                });
+            });
+        }
+
+
+
+        // 기존의 댓글 작성 기능 수정
+            $('#comment-form').submit(function(event) {
+                event.preventDefault();
+
+                // 사용자가 입력한 이름과 댓글 텍스트 가져오기
+                let nameText = $('#comment-name').val();
+                let commentText = $('#comment-input').val();
+                let region = $('#location-name').text(); // 현재 위치의 지역명 가져오기
+
+                // 필수 입력 필드가 모두 채워져 있는지 확인
+                if (nameText && commentText && region) {
+                    // POST 요청을 이용하여 서버로 데이터 전송
+                    $.post(`/comments/${encodeURIComponent(region)}/add`, {
+                        name: nameText,
+                        comment: commentText
+                    }).done(function() {
+                        // 성공적으로 댓글이 추가되면 화면에 새로운 댓글 추가
+                        let newComment = `<li><strong>${nameText}</strong>: ${commentText}</li>`;
+                        $('#comments-list').append(newComment);
+                        // 입력 필드 초기화
+                        $('#comment-name').val('');
+                        $('#comment-input').val('');
+                        console.log("댓글 추가 성공:", nameText, commentText);
+                    }).fail(function(jqxhr, textStatus, error) {
+                        // 실패 시 에러 메시지 출력
+                        console.log("댓글 추가 실패:", textStatus, error);
+                        alert("댓글 추가 실패: " + error);
+                    });
+                } else {
+                    // 필수 입력 필드가 비어있는 경우 경고 메시지 출력
+                    alert('이름과 댓글을 모두 입력해야 하며, 지역을 선택해야 합니다.');
                 }
             });
-        });
 
-        // Comment submission handling
-        $('#comment-form').submit(function(event) {
-            event.preventDefault();
-            var formData = $(this).serialize();
+            function fetchComments(region) {
+                $.get(`/api/comments/${encodeURIComponent(region)}`, function(data) {
+                    $('#comments-list').html('');
+                    data.comments.forEach(function(comment) {
+                        let commentItem = `<li><strong>${comment.name}</strong>: ${comment.comment}</li>`;
+                        $('#comments-list').append(commentItem);
+                    });
+                }).fail(function(jqxhr, textStatus, error) {
+                    console.log("댓글 가져오기 실패:", textStatus, error);
+                    alert("댓글 가져오기 실패: " + error);
+                });
+            }
 
-            $.ajax({
-                type: 'POST',
-                url: '/comments/',
-                data: formData,
-                success: function(response) {
-                    console.log('Comment submitted successfully');
-                    window.location.reload();
-                },
-                error: function(error) {
-                    console.error('Error submitting comment:', error);
-                }
-            });
-        });
+
+        function fetchLocationAndWeather() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    $.getJSON(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=ko`, function(locationResult) {
+                        const placeName = locationResult.address.city || locationResult.address.town || locationResult.address.village || '현재 위치';
+                        updateWeatherAndComments(lat, lon, placeName);
+                    });
+                }, function() {
+                    const lat = 37.5665;
+                    const lon = 126.9780;
+                    const placeName = '서울';
+                    updateWeatherAndComments(lat, lon, placeName);
+                });
+            } else {
+                const lat = 37.5665;
+                const lon = 126.9780;
+                const placeName = '서울';
+                updateWeatherAndComments(lat, lon, placeName);
+            }
+        }
+
+        fetchLocationAndWeather();
     </script>
 </body>
 </html>
+
