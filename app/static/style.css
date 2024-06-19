@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+body {
+    font-family: 'Montserrat'; /*  폰트를 우선적으로 적용 */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f8f9fa;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    color: #212529;
+    
+}
+
+
+header {
+    background-color: #3b4650;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em 2em;
+    color: white;
+}
+
+.logo {
+    font-size: 1.5em;
+    color: #c8ced5;
+    font-weight: bold;
+}
+
+.location {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.location-icon {
+    margin-right: 0.5em;
+}
+
+.search-location {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.search-location:hover {
+    color: #e8ecff;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #343a40;
+    margin: 0;
+    padding: 1em 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav ul li {
+    margin: 0 1em;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #e8ecff;
+}
+
+main {
+    padding: 2em;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.main-content {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2em;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.443);
+    border: 2px solid rgba(160, 176, 188, 0.215);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    padding: 2em;
+    box-shadow: 0 4px 8px rgba(188, 194, 200, 0.1);
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 300px; /* Set a fixed height for consistency */
+    
+}
+
+/* 현재날씨, 시간별예보, 주간예보, 실시간댓글 섹션 제목 변경 및 위치 조정 */
+.current-weather h2,
+.weekly-forecast h2,
+.hourly-forecast h2,
+.live-comments h2 {
+    font-family: 'Montserrat'; 
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 1em;
+    margin-top: -10px; /* 제목을 위로 올리는 부분 */
+    color: #2C3E50; /* 제목 글자 색상 변경 */
+}
+
+/* 기존 스타일에서 .live-comments를 찾아 크기를 조정 */
+.live-comments {
+    display: flex;
+    flex-direction: column;
+    max-height: 500px; /* 댓글 창의 최대 높이 설정 */
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+}
+
+.live-comments h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+/* 댓글 리스트 스타일 수정 */
+#comments-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px; /* 댓글 리스트 높이 조정 */
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+    display: flex;
+    flex-direction: column; /* 기본 방향 설정 */
+}
+
+
+#comments-list li {
+    padding: 0.5em 0;
+    border-bottom: 1px solid #ddd;
+}
+
+#comment-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#comment-name, #comment-input {
+    padding: 0.5em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 0.5em;
+}
+
+#comment-form button {
+    padding: 0.5em 1em;
+    border: none;
+    background-color: #71767d;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-end;
+    transition: background-color 0.3s ease;
+}
+
+#comment-form button:hover {
+    background-color: #495057;
+}
+
+.temperature-range {
+    font-size: 1.5em;
+    color: #2C3E50;
+}
+
+.current-temp {
+    font-size: 2.5em;
+    margin-top: 0.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.current-temp .weather-icon {
+    font-size: 2.5em;
+    margin-left: 0.5em;
+}
+
+.forecast {
+    display: flex;
+    justify-content: space-around;
+}
+
+.weekly-forecast, .hourly-forecast {
+    width: 48%;
+}
+
+.table-container {
+    overflow-y: auto;
+    max-height: 300px; /* Adjust the height as needed */
+}
+
+.weekly-forecast table, .hourly-forecast table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.weekly-forecast table th, .hourly-forecast table th,
+.weekly-forecast table td, .hourly-forecast table td {
+    border: 1px solid #e8ecff;
+    padding: 0.5em;
+    text-align: center;
+}
+
+.weekly-forecast table th, .hourly-forecast table th {
+    background-color: #c8ced5;
+}
+/* 스크롤바 커스터마이징 */
+.table-container::-webkit-scrollbar,
+#comments-list::-webkit-scrollbar {
+    width: 10px; /* 스크롤바의 너비 */
+}
+
+.table-container::-webkit-scrollbar-track,
+#comments-list::-webkit-scrollbar-track {
+    background: #f1f1f1; /* 스크롤바 트랙의 배경색 */
+}
+
+.table-container::-webkit-scrollbar-thumb,
+#comments-list::-webkit-scrollbar-thumb {
+    background-color: #777d89; /* 스크롤바 자체의 색상 */
+    border-radius: 5px; /* 스크롤바 썸의 모서리 둥글기 */
+}
+
+.table-container::-webkit-scrollbar-thumb:hover,
+#comments-list::-webkit-scrollbar-thumb:hover {
+    background-color: #495057; /* 마우스 호버 시 스크롤바 색상 */
+}
+
+
