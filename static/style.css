@@ -1,20 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
 body {
-    font-family: 'Montserrat'; /* ONE-Mobile-POP 폰트를 우선적으로 적용 */
+    font-family: 'Montserrat'; /*  폰트를 우선적으로 적용 */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-image: url('/static/background.jpg');
+    background-color: #f8f9fa;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+    color: #212529;
     
 }
 
 
 header {
-    background-color: #86a4ff;
+    background-color: #3b4650;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -24,7 +25,7 @@ header {
 
 .logo {
     font-size: 1.5em;
-    color: #4f49c3;
+    color: #c8ced5;
     font-weight: bold;
 }
 
@@ -56,7 +57,7 @@ nav ul {
     padding: 0;
     display: flex;
     justify-content: center;
-    background-color: #86a4ff;
+    background-color: #343a40;
     margin: 0;
     padding: 1em 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -158,7 +159,7 @@ main {
 #comment-form button {
     padding: 0.5em 1em;
     border: none;
-    background-color: #86a4ff;
+    background-color: #71767d;
     color: white;
     border-radius: 4px;
     cursor: pointer;
@@ -167,7 +168,7 @@ main {
 }
 
 #comment-form button:hover {
-    background-color: #4f49c3;
+    background-color: #495057;
 }
 
 .temperature-range {
@@ -215,7 +216,7 @@ main {
 }
 
 .weekly-forecast table th, .hourly-forecast table th {
-    background-color: #86a4ff;
+    background-color: #c8ced5;
 }
 /* 스크롤바 커스터마이징 */
 .table-container::-webkit-scrollbar,
@@ -230,13 +231,13 @@ main {
 
 .table-container::-webkit-scrollbar-thumb,
 #comments-list::-webkit-scrollbar-thumb {
-    background-color: #86a4ff; /* 스크롤바 자체의 색상 */
+    background-color: #777d89; /* 스크롤바 자체의 색상 */
     border-radius: 5px; /* 스크롤바 썸의 모서리 둥글기 */
 }
 
 .table-container::-webkit-scrollbar-thumb:hover,
 #comments-list::-webkit-scrollbar-thumb:hover {
-    background-color: #4f49c3; /* 마우스 호버 시 스크롤바 색상 */
+    background-color: #495057; /* 마우스 호버 시 스크롤바 색상 */
 }
 
 
