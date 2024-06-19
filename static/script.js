@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(error => console.error('Error fetching weekly forecast:', error));
 
     // 댓글 기능
+// script.js 파일 확인
     const commentForm = document.getElementById('comment-form');
     commentForm.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -64,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch(error => console.error('Error submitting comment:', error));
     });
+
 });
 
 function translateWeatherDescription(description) {

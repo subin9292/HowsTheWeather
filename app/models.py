@@ -1,3 +1,4 @@
+# models.py 파일 확인
 from sqlalchemy import Column, Integer, String
 from .database import Base
 

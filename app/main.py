@@ -1,7 +1,7 @@
-from fastapi import FastAPI, Request, Depends, Form
+from fastapi import FastAPI, Request, Depends, Form, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session
 import pandas as pd
 from app import models, schemas, database
@@ -39,6 +39,23 @@ async def create_comment(request: Request, name: str = Form(...), comment: str =
     db.commit()
     db.refresh(db_comment)
     return RedirectResponse(url="/", status_code=303)
+
+# 새로운 엔드포인트 정의 - 특정 지역에 대한 댓글을 추가
+@app.post("/comments/{region}/add")
+async def add_comment(region: str, name: str = Form(...), comment: str = Form(...), db: Session = Depends(database.get_db)):
+    db_comment = models.Comment(name=name, comment=f"[{region}] {comment}")
+    db.add(db_comment)
+    db.commit()
+    db.refresh(db_comment)
+    return JSONResponse(status_code=200, content={"message": "Comment added"})
+
+# 새로운 엔드포인트 정의 - 특정 지역에 대한 댓글을 가져오기
+@app.get("/api/comments/{region}")
+async def get_comments(region: str, db: Session = Depends(database.get_db)):
+    comments = db.query(models.Comment).filter(models.Comment.comment.like(f"%[{region}]%")).all()
+    if not comments:
+        raise HTTPException(status_code=404, detail="Comments not found")
+    return {"comments": [{"name": comment.name, "comment": comment.comment} for comment in comments]}
 
 # Endpoint serving location_search.html
 @app.get("/location_search", response_class=HTMLResponse)
@@ -93,5 +110,3 @@ def coordinates(place: str):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=5500, reload=True)
-
-
