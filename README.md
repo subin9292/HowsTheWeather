@@ -27,7 +27,7 @@ pip install fastapi uvicorn sqlalchemy pandas jinja2 openpyxl databases
 cd HowsTheWeather
 ```
 ```bash
-uvicorn app.main:app --reload
+uvicorn app.main:app
 ```
 
 이후 명령어 밑에 뜨는 
