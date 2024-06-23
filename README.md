@@ -29,3 +29,7 @@ cd HowsTheWeather
 ```bash
 uvicorn app.main:app --reload
 ```
+
+이후 명령어 밑에 뜨는 
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+여기에서 주소를 ctrl키를 누른채로 클릭하면 웹사이트 창이 나타납니다.
