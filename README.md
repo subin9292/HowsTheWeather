@@ -21,7 +21,7 @@ pip install fastapi uvicorn sqlalchemy pandas jinja2 openpyxl databases```
 
 ## 사용법
 
-이 git repository를 clone하여 사용한다면 HowsTheWeather 폴더 안으로 이동한 후 실행 명령어를 쳐주세요.
+이 git repository를 clone하여 사용한다면 HowsTheWeather 폴더 안으로 이동한 후 uvicorn 명령어를 실행해주세요.
 
 ```bash
 cd HowsTheWeather
