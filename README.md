@@ -16,8 +16,8 @@
 다음 명령어를 사용하여 필요한 패키지들을 설치할 수 있습니다:
 
 ```bash
-pip install fastapi uvicorn sqlalchemy pandas jinja2 openpyxl databases
-
+pip install fastapi uvicorn sqlalchemy pandas jinja2 openpyxl databases```
+```
 
 ## 사용법
 
@@ -25,4 +25,7 @@ pip install fastapi uvicorn sqlalchemy pandas jinja2 openpyxl databases
 
 ```bash
 cd HowsTheWeather
+```
+```bash
 uvicorn app.main:app --reload
+```
